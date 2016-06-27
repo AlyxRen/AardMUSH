@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE muclient>
+<!-- $Id$ -->
+
+<muclient>
+<plugin
+   name="bestattack"
+   author="Renoir, Dangrim"
+   id="43d1bad62cc2d5194bcc4611"
+   language="Lua"
+   purpose="Provide the best attack/spell for the current class/tier/level"
+   save_state="y"
+   date_written="2016-06-26 00:10:00"
+   requires="4.73"
+   version="0.1"
+   >
+
+</plugin>
+
+
+<!--  Get our standard constants -->
+
+<include name="constants.lua"/>
+
+<triggers>
+</triggers>
+
+<aliases>
+<alias
+   match="bestattack"
+   enabled="y"
+   sequence="100"
+   ignore_case="y"
+   script="bestattack"
+></alias>
+</aliases>
+
+<script>
+<![CDATA[
+
+function _gmcp(target)
+    res, gmcparg = CallPlugin( "3e7dedbe37e44942dd46d264", "gmcpval", target)
+    return gmcparg
+end
+
+function bestattack()
+    local level  = tonumber(_gmcp("char.status.level"))
+    local tier   = tonumber(_gmcp("char.base.tier"))
+    local effect = level + tier
+    local pclass = _gmcp("char.base.class")
+    local sclass = _gmcp("char.base.subclass")
+    Note("Current Spell: "..target[pclass](effect, sclass))
+    SendNoEcho(target[pclass](effect, sclass))
+end
+
+target = {
+    Cleric = function(effect, sclass)
+        if effect < 5 then
+            return "cast 'cause light'"
+        elseif effect < 11 then
+            return "cast 'soulburn'"
+        elseif effect < 17 then
+            return "cast 'holy rain'"
+        elseif effect < 24 then
+            return "cast 'cause serious'"
+        elseif effect < 33 then
+            return "cast 'minor swarm'"
+        elseif effect < 37 then
+            return "cast 'white flame'"
+        elseif effect < 40 then
+            return "cast 'spirit bolt'"
+        elseif effect < 50 then
+            return "cast 'cause critical'"
+        elseif effect < 54 then
+            return "cast 'major swarm'"
+        elseif effect < 59 then
+            return "cast 'flamestrike'"
+        elseif effect < 65 then
+            return "cast 'harm'"
+        elseif effect < 75 then
+            return "cast 'torment'"
+        elseif effect < 81 then
+            return "cast 'fireblast'"
+        elseif effect < 93 then
+            return "cast 'blight'"
+        elseif effect < 101 then
+            return "cast 'light arrow'"
+        elseif effect < 112 then
+            return "cast 'extinguish'"
+        elseif effect < 124 then
+            return "cast 'engulf'"
+        elseif effect < 136 then
+            return "cast 'exorcise'"
+        elseif effect < 147 then
+            return "cast 'caustic rain'"
+        elseif effect < 156 then
+            return "cast 'vengeance'"
+        elseif effect < 170 then
+            return "cast 'spiritual disruption'"
+        elseif effect < 182 then
+            return "cast 'starburst'"
+        elseif effect < 189 then
+            return "cast 'finger of death'"
+        elseif effect >= 189 then
+            return "cast 'voice of god'"
+        end
+    end,
+    Psionicist = function(effect, sclass)
+        if effect < 7 then
+            return "cast 'ballistic attack'"
+        elseif effect < 9 then
+            return "cast 'mind thrust'"
+        elseif effect < 12 then
+            return "cast 'psychic drain'"
+        elseif effect < 15 then
+            return "cast 'ego whip'"
+        elseif effect < 21 then
+            return "cast 'agitation'"
+        elseif effect < 25 then
+            return "cast 'inflictpain'"
+        elseif effect < 29 then
+            return "cast 'telekinesis'"
+        elseif effect < 31 then
+            return "cast 'soften'"
+        elseif effect < 34 then
+            return "cast 'mindfreeze'"
+        elseif effect < 39 then
+            return "cast 'control flames'"
+        elseif effect < 43 then
+            return "cast 'nerve shock'"
+        elseif effect < 49 then
+            return "cast 'psychic crush'"
+        elseif effect < 55 then
+            return "cast 'cause decay'"
+        elseif effect < 60 then
+            return "cast 'acidic touch'"
+        elseif effect < 65 then
+            return "cast 'neuralburn'"
+        elseif effect < 74 then
+            return "cast 'project force'"
+        elseif effect < 86 then
+            return "cast 'psionic blast'"
+        elseif effect < 94 then
+            return "cast 'detonate'"
+        elseif effect < 108 then
+            return "cast 'trauma'"
+        elseif effect < 117 then
+            return "cast 'psychosis'"
+        elseif effect < 124 then
+            return "cast 'spasm'"
+        elseif effect < 136 then
+            return "cast 'nightmare touch'"
+        elseif effect < 151 then
+            return "cast 'megablast'"
+        elseif effect < 164 then
+            return "cast 'neural overload'"
+        elseif effect < 179 then
+            return "cast 'pyromania'"
+        elseif effect < 185 then
+            return "cast 'desolation'"
+        elseif effect >= 185 and sclass == "necromancer" then
+            return "cast 'necrocide'"
+        elseif effect >= 185 then
+            return "cast 'desolation'"
+        end
+    end,
+}
+
+]]>
+</script>
+
+</muclient>

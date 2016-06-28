@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE muclient>
+<!-- $Id$ -->
+
+<muclient>
+<plugin
+   name="qprac"
+   author="Renoir"
+   id="5b47042f0467547498688cfd"
+   language="Lua"
+   purpose="Provide the best attack/spell for the current class/tier/level"
+   save_state="y"
+   date_written="2016-06-28 00:10:00"
+   requires="4.73"
+   version="0.1"
+   >
+
+</plugin>
+
+
+<!--  Get our standard constants -->
+
+<include name="constants.lua"/>
+
+<triggers>
+</triggers>
+
+<aliases>
+<alias
+   match="^qprac( help)? .*$"
+   enabled="y"
+   regexp="y"
+   sequence="101"
+   ignore_case="y"
+   script="qprac_help"
+></alias>
+<alias
+    match="^qprac list (( (?P<minlevel>[12]?\d{1,2}) (?P<maxlevel>[12]?\d{1,2}|\*))?( (?P<category>\w+))?( (?P<minprac>1?\d{1,2}) (?P<maxprac>1?\d{1,2}))?)?$"
+   enabled="y"
+   regexp="y"
+   sequence="100"
+   ignore_case="y"
+   script="qprac_list"
+></alias>
+</aliases>
+
+<script>
+<![CDATA[
+
+function qprac_help()
+    Note("This is help documentation")
+end
+
+function qprac_list(alias, line, wildcards)
+    Note("Min Level: "..wildcards.minlevel)
+    Note("Max Level: "..wildcards.maxlevel)
+    Note("Category: "..wildcards.category)
+    Note("Min Prac:"..wildcards.minprac)
+    Note("Max Prac:"..wildcards.maxprac)
+end
+
+]]>
+</script>
+
+</muclient>

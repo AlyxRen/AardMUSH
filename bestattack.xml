@@ -105,6 +105,75 @@ target = {
             return "cast 'voice of god'"
         end
     end,
+    Mage = function(effect, sclass)
+        if effect < 4 then
+            return "cast 'magic missile'"
+        elseif effect < 9 then
+            return "cast 'chill touch'"
+        elseif effect < 16 then
+            return "cast 'burning hands'"
+        elseif effect < 24 then
+            return "cast 'banshee wail'"
+        elseif effect < 29 then
+            return "cast 'shocking grasp'"
+        elseif effect < 31 then
+            return "cast 'colour spray'"
+        elseif effect < 34 then
+            return "cast 'wither'"
+        elseif effect < 38 then
+            return "cast 'prismatic spray'"
+        elseif effect < 42 then
+            return "cast 'fireball'"
+        elseif effect < 46 then
+            return "cast 'vampiric touch'"
+        elseif effect < 58 then
+            return "cast 'teleport behind'"
+        elseif effect < 62 then
+            return "cast 'flame arrow'"
+        elseif effect < 69 then
+            return "cast 'acid blast'"
+        elseif effect < 76 then
+            return "cast 'cone of cold'"
+        elseif effect < 85 then
+            return "cast 'flaming sphere'"
+        elseif effect < 94 then
+            return "cast 'talon'"
+        elseif effect < 103 then
+            return "cast 'force bolt'"
+        elseif effect < 113 then
+            return "cast 'shard of ice'"
+        elseif effect < 119 then
+            return "cast 'shock aura'"
+        elseif effect < 126 then
+            return "cast 'scorch'"
+        elseif effect < 137 then
+            return "cast 'acid wave'"
+        elseif effect < 145 then
+            return "cast 'balefire'"
+        elseif effect < 156 then
+            return "cast 'nova'"
+        elseif effect < 167 then
+            return "cast 'lightning strike'"
+        elseif effect < 175 then
+            return "cast 'miasma'"
+        elseif effect < 180 and sclass == "elementalist" then
+            return "cast 'air skewer'"
+        elseif effect < 184 and sclass == "elementalist" then
+            return "cast 'earthen hammer'"
+        elseif effect < 184 then
+            return "cast 'miasma'"
+        elseif effect == 184 then
+            return "cast 'acid stream'"
+        elseif effect < 191 and sclass == "elementalist" then
+            return "cast 'ice daggers'"
+        elseif effect < 191 then
+            return "cast 'acid stream'"
+        elseif effect >= 191 and sclass == "sorcerer" then
+            return "cast 'spear of odin'"
+        elseif effect >= 191 then
+            return "cast 'immolate'"
+        end
+    end,
     Psionicist = function(effect, sclass)
         if effect < 7 then
             return "cast 'ballistic attack'"

@@ -158,7 +158,7 @@ target = {
             return "cast 'pyromania'"
         elseif effect < 185 then
             return "cast 'desolation'"
-        elseif effect >= 185 and sclass == "necromancer" then
+        elseif effect >= 185 and sclass == "Necromancer" then
             return "cast 'necrocide'"
         elseif effect >= 185 then
             return "cast 'desolation'"

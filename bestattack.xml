@@ -174,6 +174,47 @@ target = {
             return "cast 'immolate'"
         end
     end,
+    Paladin = function(effect, sclass)
+        if sclass == "inquisitor" then
+            return "flay"
+        elseif effect < 9 then
+            return "kick"
+        elseif effect < 14 then
+            return "holy fury"
+        elseif effect < 23 then
+            return "glare"
+        elseif effect < 35 then
+            return "soulrip"
+        elseif effect < 46 then
+            return "condemn"
+        elseif effect < 62 then
+            return "infernalvoice"
+        elseif effect < 78 then
+            return "scourge"
+        elseif effect < 89 then
+            return "pillar"
+        elseif effect < 106 then
+            return "holyarrow"
+        elseif effect < 118 then
+            return "repentance"
+        elseif effect < 131 then
+            return "spiritstrike"
+        elseif effect < 141 then
+            return "damn"
+        elseif effect < 148 then
+            return "holystrike"
+        elseif effect < 157 then
+            return "reckoning"
+        elseif effect < 163 then
+            return "abomination"
+        elseif effect < 169 then
+            return "purgatory"
+        elseif effect < 189 then
+            return "bfury"
+        elseif effect >= 189 then
+            return "hb"
+        end
+    end,
     Psionicist = function(effect, sclass)
         if effect < 7 then
             return "cast 'ballistic attack'"

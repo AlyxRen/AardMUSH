@@ -22,9 +22,52 @@
 
 <include name="constants.lua"/>
 
-<triggers>
-</triggers>
 
+<triggers>
+  <trigger
+   enabled="y"
+   match="^Skill/Spell List - Brief Version:$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+   omit_from_output="y"
+   name="start_qspell"
+  >
+  <send>
+      EnableTrigger("process_qspell", 1)
+  </send>
+  </trigger>
+  <trigger
+   enabled="n"
+   match="(.*)"
+   regexp="y"
+   sequence="101"
+   omit_from_output="n"
+   name="process_qspell"
+   script="process_qspell"
+  ></trigger>
+  <trigger
+   enabled="y"
+   match="^End of list\.$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+   omit_from_output="y"
+   name="finish_qspell"
+  >
+  <send>
+      EnableTrigger("process_qspell", 0)
+  </send>
+  </trigger>
+  <trigger
+   enabled="y"
+   match="^To see all skills/spells for your class, use 'allspells \<class\>'$"
+   regexp="y"
+   sequence="100"
+   name="display_qspell"
+   script="display_qspell_list"
+  ></trigger>
+</triggers>
 <aliases>
 <alias
    match="^qprac( help)? .*$"
@@ -35,8 +78,24 @@
    script="qprac_help"
 ></alias>
 <alias
-    match="^qprac list (( (?P<minlevel>[12]?\d{1,2}) (?P<maxlevel>[12]?\d{1,2}|\*))?( (?P<category>\w+))?( (?P<minprac>1?\d{1,2}) (?P<maxprac>1?\d{1,2}))?)?$"
+   match="^qprac remove (?P<spell>.*)$"
    enabled="y"
+   regexp="y"
+   sequence="100"
+   ignore_case="y"
+   script="qprac_remove"
+></alias>
+<alias
+   match="^qprac list$"
+   enabled="y"
+   regexp="y"
+   sequence="100"
+   ignore_case="y"
+   script="display_qspell_list"
+></alias>
+<alias
+    match="^qprac list (( (?P<minlevel>[12]?\d{1,2}) (?P<maxlevel>[12]?\d{1,2}|\*))?( (?P<category>\w+))?( (?P<minprac>1?\d{1,2}) (?P<maxprac>1?\d{1,2}))?)?$"
+   enabled="n"
    regexp="y"
    sequence="100"
    ignore_case="y"
@@ -46,6 +105,15 @@
 
 <script>
 <![CDATA[
+
+spell_name_fg = "white"
+spell_name_bg = "black"
+spell_remove_fg = "lightred"
+spell_remove_bg = spell_name_bg
+spell_show_fg = "lightblue"
+spell_show_bg = spell_name_bg
+
+list = {}
 
 function qprac_help()
     Note("This is help documentation")
@@ -58,6 +126,43 @@ function qprac_list(alias, line, wildcards)
     Note("Min Prac:"..wildcards.minprac)
     Note("Max Prac:"..wildcards.maxprac)
 end
+
+function qprac_remove(trigger, line, wildcards)
+    local new_list = {}
+    for i,v in ipairs(list) do
+        if v ~= wildcards.spell then
+            new_list[#new_list+1] = v
+        end
+    end
+    list = new_list
+    ColourNote(spell_name_fg, spell_name_bg, wildcards.spell.." has been removed.")
+end
+
+function process_qspell(trigger, line, wildcards)
+    --Note(wildcards[1])
+    DeleteLines(1)
+    local spell = wildcards[1]:gsub("^%s+", ""):gsub("%s+$", "")
+    for i,v in ipairs(list) do
+        if v == spell then
+            return nil
+        end
+    end
+    list[#list+1] = spell
+end
+function display_qspell_list(trigger, line, wildcards)
+    DeleteLines(1)
+    for i,spell in ipairs(list) do
+        display_spell(spell)
+    end
+end
+function display_spell(spell_name)
+    Hyperlink("qprac remove "..spell_name, "[-] ", "Remove "..spell_name, spell_remove_fg, spell_remove_bg)
+    Hyperlink("showspell "..spell_name, "[?] ", "Show Spell "..spell_name, spell_show_fg, spell_show_bg)
+    ColourTell(spell_name_fg, spell_name_bg, spell_name)
+    Note()
+
+end
+
 
 ]]>
 </script>

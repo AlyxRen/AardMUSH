@@ -83,7 +83,7 @@
    regexp="y"
    sequence="100"
    ignore_case="y"
-   script="qprac_remove"
+   script="remove_spell"
 ></alias>
 <alias
    match="^qprac list$"
@@ -127,7 +127,7 @@ function qprac_list(alias, line, wildcards)
     Note("Max Prac:"..wildcards.maxprac)
 end
 
-function qprac_remove(trigger, line, wildcards)
+function remove_spell(trigger, line, wildcards)
     local new_list = {}
     for i,v in ipairs(list) do
         if v ~= wildcards.spell then

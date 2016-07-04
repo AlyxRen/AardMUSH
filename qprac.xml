@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
+
+<!DOCTYPE muclient [
+   <!ENTITY scholar "false" > 
+]>
+
 <!DOCTYPE muclient>
 <!-- $Id$ -->
 
@@ -68,6 +73,7 @@
    script="display_qspell_list"
   ></trigger>
 </triggers>
+
 <aliases>
 <alias
    match="^qprac( help)? .*$"
@@ -94,12 +100,20 @@
    script="display_qspell_list"
 ></alias>
 <alias
-    match="^qprac list (( (?P<minlevel>[12]?\d{1,2}) (?P<maxlevel>[12]?\d{1,2}|\*))?( (?P<category>\w+))?( (?P<minprac>1?\d{1,2}) (?P<maxprac>1?\d{1,2}))?)?$"
-   enabled="n"
+   match="^qprac scholar$"
+   enabled="y"
    regexp="y"
    sequence="100"
    ignore_case="y"
-   script="qprac_list"
+   script="toggle_scholar"
+></alias>
+<alias
+   match="^qspell( [a-zA-Z]*)?$"
+   enabled="y"
+   regexp="y"
+   sequence="100"
+   ignore_case="y"
+   script="find_spells"
 ></alias>
 </aliases>
 
@@ -111,6 +125,7 @@ function _gmcp(target)
     return gmcparg
 end
 
+scholar = true
 spell_name_fg = "white"
 spell_name_bg = "black"
 spell_remove_fg = "lightred"
@@ -124,12 +139,22 @@ function qprac_help()
     Note("This is help documentation")
 end
 
-function qprac_list(alias, line, wildcards)
-    Note("Min Level: "..wildcards.minlevel)
-    Note("Max Level: "..wildcards.maxlevel)
-    Note("Category: "..wildcards.category)
-    Note("Min Prac:"..wildcards.minprac)
-    Note("Max Prac:"..wildcards.maxprac)
+function toggle_scholar(name, line, wildcards)
+    if scholar then
+        ColourNote(spell_show_fg, spell_show_bg, "Do not have the Scholar Wish.")
+        scholar = false
+    else
+        ColourNote(spell_show_fg, spell_show_bg, "Have the Scholar Wish.")
+        scholar = true
+    end
+end
+
+function find_spells(alias, line, wildcards)
+    local level  = tonumber(_gmcp("char.status.level"))
+    local category = wildcards[1]
+    local prac = scholar and 94 or 84
+
+    SendNoEcho("qspell 1 "..level..category.." 0 "..prac)
 end
 
 function remove_spell(trigger, line, wildcards)
@@ -144,8 +169,9 @@ function remove_spell(trigger, line, wildcards)
 end
 
 function process_qspell(trigger, line, wildcards)
-    --Note(wildcards[1])
+    -- Note(wildcards[1])
     DeleteLines(1)
+    -- ColourNote(spell_name_fg, spell_name_bg, "Scholar: "..(scholar and "True!" or "False!"))
     local spell = wildcards[1]:gsub("^%s+", ""):gsub("%s+$", "")
     for i,v in ipairs(list) do
         if v == spell then
@@ -169,6 +195,21 @@ function display_spell(spell_name)
 end
 
 
+function OnPluginInstall()
+    if GetVariable("scholar") == 'true' then
+        scholar = true
+    else
+        scholar = false
+    end
+end -- OnPluginConnect
+
+function OnPluginSaveState()
+    if scholar then
+        SetVariable("scholar", "true")
+    else
+        SetVariable("scholar", "false")
+    end
+end -- OnPluginSaveState
 ]]>
 </script>
 

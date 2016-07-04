@@ -227,13 +227,13 @@ target = {
         elseif effect < 21 then
             return "cast 'agitation'"
         elseif effect < 25 then
-            return "cast 'inflictpain'"
+            return "cast 'inflict pain'"
         elseif effect < 29 then
             return "cast 'telekinesis'"
         elseif effect < 31 then
             return "cast 'soften'"
         elseif effect < 34 then
-            return "cast 'mindfreeze'"
+            return "cast 'mind freeze'"
         elseif effect < 39 then
             return "cast 'control flames'"
         elseif effect < 43 then

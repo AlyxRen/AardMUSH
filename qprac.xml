@@ -100,6 +100,22 @@
    script="display_qspell_list"
 ></alias>
 <alias
+   match="^qprac next$"
+   enabled="y"
+   regexp="y"
+   sequence="100"
+   ignore_case="y"
+   script="qprac_next"
+></alias>
+<alias
+   match="^qprac all$"
+   enabled="y"
+   regexp="y"
+   sequence="100"
+   ignore_case="y"
+   script="qprac_all"
+></alias>
+<alias
    match="^qprac scholar$"
    enabled="y"
    regexp="y"
@@ -137,6 +153,18 @@ list = {}
 
 function qprac_help()
     Note("This is help documentation")
+end
+
+function qprac_next()
+    local head = table.remove(list, 1)
+    Send("practice "..head.." full")
+end
+
+function qprac_all()
+    for i,v in ipairs(list) do
+        Send("practice "..v.." full")
+    end
+    list = {}
 end
 
 function toggle_scholar(name, line, wildcards)

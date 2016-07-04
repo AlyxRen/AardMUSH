@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!DOCTYPE muclient [
+   <!ENTITY scholar "false" > 
+]>
+
+<!DOCTYPE muclient>
+<!-- $Id$ -->
+
+<muclient>
+<plugin
+   name="qprac"
+   author="Renoir"
+   id="5b47042f0467547498688cfd"
+   language="Lua"
+   purpose="Provide the best attack/spell for the current class/tier/level"
+   save_state="y"
+   date_written="2016-06-28 00:10:00"
+   requires="4.73"
+   version="0.1"
+   >
+
+</plugin>
+
+
+<!--  Get our standard constants -->
+
+<include name="constants.lua"/>
+
+
+<triggers>
+  <trigger
+   enabled="y"
+   match="^Skill/Spell List - Brief Version:$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+   omit_from_output="y"
+   name="start_qspell"
+  >
+  <send>
+      EnableTrigger("process_qspell", 1)
+  </send>
+  </trigger>
+  <trigger
+   enabled="n"
+   match="(.*)"
+   regexp="y"
+   sequence="101"
+   omit_from_output="n"
+   name="process_qspell"
+   script="process_qspell"
+  ></trigger>
+  <trigger
+   enabled="y"
+   match="^End of list\.$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+   omit_from_output="y"
+   name="finish_qspell"
+  >
+  <send>
+      EnableTrigger("process_qspell", 0)
+  </send>
+  </trigger>
+  <trigger
+   enabled="y"
+   match="^To see all skills/spells for your class, use 'allspells \<class\>'$"
+   regexp="y"
+   sequence="100"
+   name="display_qspell"
+   script="display_qspell_list"
+  ></trigger>
+</triggers>
+
+<aliases>
+<alias
+   match="^qprac( help)? .*$"
+   enabled="y"
+   regexp="y"
+   sequence="101"
+   ignore_case="y"
+   script="qprac_help"
+></alias>
+<alias
+   match="^qprac remove (?P<spell>.*)$"
+   enabled="y"
+   regexp="y"
+   sequence="100"
+   ignore_case="y"
+   script="remove_spell"
+></alias>
+<alias
+   match="^qprac list$"
+   enabled="y"
+   regexp="y"
+   sequence="100"
+   ignore_case="y"
+   script="display_qspell_list"
+></alias>
+<alias
+   match="^qprac next$"
+   enabled="y"
+   regexp="y"
+   sequence="100"
+   ignore_case="y"
+   script="qprac_next"
+></alias>
+<alias
+   match="^qprac all$"
+   enabled="y"
+   regexp="y"
+   sequence="100"
+   ignore_case="y"
+   script="qprac_all"
+></alias>
+<alias
+   match="^qprac scholar$"
+   enabled="y"
+   regexp="y"
+   sequence="100"
+   ignore_case="y"
+   script="toggle_scholar"
+></alias>
+<alias
+   match="^qspell( [a-zA-Z]*)?$"
+   enabled="y"
+   regexp="y"
+   sequence="100"
+   ignore_case="y"
+   script="find_spells"
+></alias>
+</aliases>
+
+<script>
+<![CDATA[
+
+function _gmcp(target)
+    res, gmcparg = CallPlugin( "3e7dedbe37e44942dd46d264", "gmcpval", target)
+    return gmcparg
+end
+
+scholar = true
+spell_name_fg = "white"
+spell_name_bg = "black"
+spell_remove_fg = "lightred"
+spell_remove_bg = spell_name_bg
+spell_show_fg = "lightblue"
+spell_show_bg = spell_name_bg
+
+list = {}
+
+function qprac_help()
+    Note("This is help documentation")
+end
+
+function qprac_next()
+    local head = table.remove(list, 1)
+    Send("practice "..head.." full")
+end
+
+function qprac_all()
+    for i,v in ipairs(list) do
+        Send("practice "..v.." full")
+    end
+    list = {}
+end
+
+function toggle_scholar(name, line, wildcards)
+    if scholar then
+        ColourNote(spell_show_fg, spell_show_bg, "Do not have the Scholar Wish.")
+        scholar = false
+    else
+        ColourNote(spell_show_fg, spell_show_bg, "Have the Scholar Wish.")
+        scholar = true
+    end
+end
+
+function find_spells(alias, line, wildcards)
+    local level  = tonumber(_gmcp("char.status.level"))
+    local category = wildcards[1]
+    local prac = scholar and 94 or 84
+
+    SendNoEcho("qspell 1 "..level..category.." 0 "..prac)
+end
+
+function remove_spell(trigger, line, wildcards)
+    local new_list = {}
+    for i,v in ipairs(list) do
+        if v ~= wildcards.spell then
+            new_list[#new_list+1] = v
+        end
+    end
+    list = new_list
+    ColourNote(spell_name_fg, spell_name_bg, wildcards.spell.." has been removed.")
+end
+
+function process_qspell(trigger, line, wildcards)
+    -- Note(wildcards[1])
+    DeleteLines(1)
+    -- ColourNote(spell_name_fg, spell_name_bg, "Scholar: "..(scholar and "True!" or "False!"))
+    local spell = wildcards[1]:gsub("^%s+", ""):gsub("%s+$", "")
+    for i,v in ipairs(list) do
+        if v == spell then
+            return nil
+        end
+    end
+    list[#list+1] = spell
+end
+function display_qspell_list(trigger, line, wildcards)
+    DeleteLines(1)
+    for i,spell in ipairs(list) do
+        display_spell(spell)
+    end
+end
+function display_spell(spell_name)
+    Hyperlink("qprac remove "..spell_name, "[-] ", "Remove "..spell_name, spell_remove_fg, spell_remove_bg)
+    Hyperlink("showspell "..spell_name, "[?] ", "Show Spell "..spell_name, spell_show_fg, spell_show_bg)
+    ColourTell(spell_name_fg, spell_name_bg, spell_name)
+    Note()
+
+end
+
+
+function OnPluginInstall()
+    if GetVariable("scholar") == 'true' then
+        scholar = true
+    else
+        scholar = false
+    end
+end -- OnPluginConnect
+
+function OnPluginSaveState()
+    if scholar then
+        SetVariable("scholar", "true")
+    else
+        SetVariable("scholar", "false")
+    end
+end -- OnPluginSaveState
+]]>
+</script>
+
+</muclient>

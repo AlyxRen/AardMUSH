@@ -17,9 +17,34 @@
    save_state="y"
    date_written="2016-06-28 00:10:00"
    requires="4.73"
-   version="0.1"
+   version="0.9"
    >
+<description trim="y">
+<![CDATA[
+qspell; Gets all unpracticed spells up to your
+        current level, then shows the current queue
 
+qspell fire; gets all unpracticed fire spells up to your
+             current level, then shows the current queue.
+
+qprac set scholar; This will set that you're looking at 95
+                   as fully practiced. Only needed once.
+
+qprac list; Shows all spells currently in queue. Each entry
+            has a [-] and [?]. These are clickable links that
+            remove it from the queue and show the spell's help.
+
+qprac help; Shows detailed help documentation on how to use
+            these commands.
+
+qprac remove spellname; Removes the spell from the queue.
+                        Called automatically by clicking [-]
+
+qprac next; practices the next spell in the queue.
+
+qprac all; batch sends practice full for each spell.@w
+]]>
+</description>
 </plugin>
 
 

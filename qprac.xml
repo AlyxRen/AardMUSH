@@ -17,42 +17,46 @@
    save_state="y"
    date_written="2016-06-28 00:10:00"
    requires="4.73"
-   version="0.7"
+   version="0.95"
    >
 <description trim="y">
 <![CDATA[
-qprac and qpract are interchangeable
+                        Qprac v0.95
+         Configuration:
 
-qspell; Gets all unpracticed spells up to your
-        current level, then shows the current queue
+     qprac set scholar: This will set that you're looking at 95
+                        as fully practiced. Only needed once.
 
-qspell fire; gets all unpracticed fire spells up to your
-             current level, then shows the current queue.
+    Available Commands:
 
-qprac set scholar; This will set that you're looking at 95
-                   as fully practiced. Only needed once.
+            qprac help: Shows detailed help documentation on how to use
+                        these commands.
 
-qprac list; Shows all spells currently in queue. Each entry
-            has a [-] and [?]. These are clickable links that
-            remove it from the queue and show the spell's help.
+                qspell: Gets all unpracticed spells up to your 
+                        current level, then shows the current queue
 
-qprac help; Shows detailed help documentation on how to use
-            these commands.
+           qspell fire: gets all unpracticed fire spells up to your
+                        current level, then shows the current queue.
 
-qprac up spellname; Moves the spell up in the queue.
-                    Called automatically by clicking [+]
+            qprac list: Shows all spells currently in queue. Each entry
+                        has a lists of buttons. + and - move the spell up
+                        and down in the queue, and help and show send help
+                        and showspell respectively.
 
-qprac down spellname; Moves the spell down in the queue.
-                      Called automatically by clicking [-]
+    qprac up spellname: Moves the spell up in the queue.
+                        Called automatically by clicking [+]
 
-qprac remove spellname; Removes the spell from the queue.
+  qprac down spellname: Moves the spell down in the queue.
+                        Called automatically by clicking [-]
+
+qprac remove spellname: Removes the spell from the queue.
                         Called automatically by clicking [x]
 
-qprac clear; Clears the queue to practice
+           qprac clear: Clears the queue to practice
 
-qprac next; practices the next spell in the queue.
+            qprac next: practices the next spell in the queue.
 
-qprac all; batch sends practice full for each spell.@w
+             qprac all: batch sends practice full for each spell.
 ]]>
 </description>
 </plugin>
@@ -204,10 +208,89 @@ spell_remove_bg = spell_name_bg
 spell_show_fg = "lightblue"
 spell_show_bg = spell_name_bg
 
+help_bg = "black"
+help_name_fg = "lightgreen"
+help_general_fg = "white"
+
 list = {}
 
 function qprac_help()
-    Note("This is help documentation")
+    ColourNote(help_name_fg, help_bg, "                        Qprac v0.95")
+
+    ColourTell(help_name_fg, help_bg, "         Configuration")
+    ColourNote(help_general_fg, help_bg, ":")
+
+    Note("")
+
+    ColourTell(help_name_fg, help_bg, "     qprac set scholar")
+    ColourNote(help_general_fg, help_bg, ": This will set that you're looking at 95")
+    ColourNote(help_general_fg, help_bg, "                        as fully practiced. Only needed once.")
+
+    Note("")
+
+    ColourTell(help_name_fg, help_bg, "    Available Commands")
+    ColourNote(help_general_fg, help_bg, ":")
+
+    Note("")
+
+    ColourTell(help_name_fg, help_bg, "            qprac help")
+    ColourNote(help_general_fg, help_bg, ": Shows detailed help documentation on how to use")
+    ColourNote(help_general_fg, help_bg, "                        these commands.")
+
+    Note("")
+
+    ColourTell(help_name_fg, help_bg, "                qspell")
+    ColourNote(help_general_fg, help_bg, ": Gets all unpracticed spells up to your ")
+    ColourNote(help_general_fg, help_bg, "                        current level, then shows the current queue")
+
+    Note("")
+
+    ColourTell(help_name_fg, help_bg, "           qspell fire")
+    ColourNote(help_general_fg, help_bg, ": gets all unpracticed fire spells up to your")
+    ColourNote(help_general_fg, help_bg, "                        current level, then shows the current queue.")
+
+    Note("")
+
+    ColourTell(help_name_fg, help_bg, "            qprac list")
+    ColourNote(help_general_fg, help_bg, ": Shows all spells currently in queue. Each entry")
+    ColourNote(help_general_fg, help_bg, "                        has a lists of buttons. + and - move the spell up")
+    ColourNote(help_general_fg, help_bg, "                        and down in the queue, and help and show send help")
+    ColourNote(help_general_fg, help_bg, "                        and showspell respectively.")
+
+    Note("")
+
+    ColourTell(help_name_fg, help_bg, "    qprac up spellname")
+    ColourNote(help_general_fg, help_bg, ": Moves the spell up in the queue.")
+    ColourNote(help_general_fg, help_bg, "                        Called automatically by clicking [+]")
+
+    Note("")
+
+    ColourTell(help_name_fg, help_bg, "  qprac down spellname")
+    ColourNote(help_general_fg, help_bg, ": Moves the spell down in the queue.")
+    ColourNote(help_general_fg, help_bg, "                        Called automatically by clicking [-]")
+
+    Note("")
+
+    ColourTell(help_name_fg, help_bg, "qprac remove spellname")
+    ColourNote(help_general_fg, help_bg, ": Removes the spell from the queue.")
+    ColourNote(help_general_fg, help_bg, "                        Called automatically by clicking [x]")
+
+    Note("")
+
+    ColourTell(help_name_fg, help_bg, "           qprac clear")
+    ColourNote(help_general_fg, help_bg, ": Clears the queue to practice")
+
+    Note("")
+
+    ColourTell(help_name_fg, help_bg, "            qprac next")
+    ColourNote(help_general_fg, help_bg, ": practices the next spell in the queue.")
+
+    Note("")
+
+    ColourTell(help_name_fg, help_bg, "             qprac all")
+    ColourNote(help_general_fg, help_bg, ": batch sends practice full for each spell.")
+
+
 end
 
 function qprac_next()

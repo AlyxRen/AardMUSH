@@ -17,7 +17,7 @@
    save_state="y"
    date_written="2016-06-28 00:10:00"
    requires="4.73"
-   version="0.65"
+   version="0.7"
    >
 <description trim="y">
 <![CDATA[
@@ -39,8 +39,14 @@ qprac list; Shows all spells currently in queue. Each entry
 qprac help; Shows detailed help documentation on how to use
             these commands.
 
+qprac up spellname; Moves the spell up in the queue.
+                    Called automatically by clicking [+]
+
+qprac down spellname; Moves the spell down in the queue.
+                      Called automatically by clicking [-]
+
 qprac remove spellname; Removes the spell from the queue.
-                        Called automatically by clicking [-]
+                        Called automatically by clicking [x]
 
 qprac clear; Clears the queue to practice
 
@@ -109,6 +115,22 @@ qprac all; batch sends practice full for each spell.@w
    script="qprac_help"
 ></alias>
 <alias
+   match="^qpract? up (?P<spell>.*)$"
+   enabled="y"
+   regexp="y"
+   sequence="100"
+   ignore_case="y"
+   script="move_up_spell"
+></alias>
+<alias
+   match="^qpract? down (?P<spell>.*)$"
+   enabled="y"
+   regexp="y"
+   sequence="100"
+   ignore_case="y"
+   script="move_down_spell"
+></alias>
+<alias
    match="^qpract? remove (?P<spell>.*)$"
    enabled="y"
    regexp="y"
@@ -149,7 +171,7 @@ qprac all; batch sends practice full for each spell.@w
    script="qprac_all"
 ></alias>
 <alias
-   match="^qpract? scholar$"
+   match="^qpract?( set)? scholar$"
    enabled="y"
    regexp="y"
    sequence="100"
@@ -231,6 +253,42 @@ function remove_all(trigger, line, wildcards)
     ColourNote(spell_name_fg, spell_name_bg, "Cleared the list of spells.")
 end
 
+function move_up_spell(trigger, line, wildcards)
+    local location = 0
+    for i,v in ipairs(list) do
+        if v == wildcards.spell then
+            location = i
+        end
+    end
+    if location > 1 then
+        table.insert(list, location - 1, table.remove(list, location))
+        ColourNote(spell_name_fg, spell_name_bg, wildcards.spell .. " has been moved up in the queue.")
+    elseif location == 1 then
+        ColourNote(spell_name_fg, spell_name_bg, wildcards.spell .. " is the first item aready.")
+    else
+        ColourNote(spell_name_fg, spell_name_bg, wildcards.spell .. " is not in the queue.")
+    end
+end
+
+function move_down_spell(trigger, line, wildcards)
+    local new_list = {}
+    for i,v in ipairs(list) do
+        if v == wildcards.spell then
+            location = i
+        end
+    end
+    if location > 0 and location ~= #list then
+        table.insert(list, location + 1, table.remove(list, location))
+        ColourNote(spell_name_fg, spell_name_bg, wildcards.spell .. " has been moved down in the queue.")
+    elseif location == #list then
+        ColourNote(spell_name_fg, spell_name_bg, wildcards.spell .. " is the last item aready.")
+    else
+        ColourNote(spell_name_fg, spell_name_bg, wildcards.spell .. " is not in the queue.")
+    end
+
+    --ColourNote(spell_name_fg, spell_name_bg, wildcards.spell.." has been removed.")
+end
+
 function remove_spell(trigger, line, wildcards)
     local new_list = {}
     for i,v in ipairs(list) do
@@ -249,10 +307,10 @@ function start_process()
 
     ColourNote(spell_name_fg, spell_name_bg, "Found the following spells and added to queue:")
 end
+
 function process_qspell(trigger, line, wildcards)
     -- Note(wildcards[1])
     DeleteLines(1)
-    -- ColourNote(spell_name_fg, spell_name_bg, "Scholar: "..(scholar and "True!" or "False!"))
     local spell = wildcards[1]:gsub("^%s+", ""):gsub("%s+$", "")
     for i,v in ipairs(list) do
         if v == spell then
@@ -262,20 +320,26 @@ function process_qspell(trigger, line, wildcards)
     list[#list+1] = spell
     display_spell(spell)
 end
+
 function end_process()
       EnableTrigger("process_qspell", 0)
       DeleteLines(1)
       ColourNote(spell_name_fg, spell_name_bg, "End of list.")
 end
+
 function display_qspell_list(trigger, line, wildcards)
     DeleteLines(1)
     for i,spell in ipairs(list) do
         display_spell(spell)
     end
 end
+
 function display_spell(spell_name)
-    Hyperlink("qprac remove "..spell_name, "[-] ", "Remove "..spell_name, spell_remove_fg, spell_remove_bg)
-    Hyperlink("showspell "..spell_name, "[?] ", "Show Spell "..spell_name, spell_show_fg, spell_show_bg)
+    Hyperlink("qprac up "..spell_name, "[+] ", "Move "..spell_name.." up", spell_remove_fg, spell_remove_bg)
+    Hyperlink("qprac down "..spell_name, "[-] ", "Remove "..spell_name.." down", spell_remove_fg, spell_remove_bg)
+    Hyperlink("qprac remove "..spell_name, "[x] ", "Remove "..spell_name, spell_remove_fg, spell_remove_bg)
+    Hyperlink("showspell "..spell_name, "[show] ", "Show Spell "..spell_name, spell_show_fg, spell_show_bg)
+    Hyperlink("help "..spell_name, "[help] ", "help "..spell_name, spell_show_fg, spell_show_bg)
     ColourTell(spell_name_fg, spell_name_bg, spell_name)
     Note()
 

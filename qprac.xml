@@ -21,6 +21,8 @@
    >
 <description trim="y">
 <![CDATA[
+qprac and qpract are interchangeable
+
 qspell; Gets all unpracticed spells up to your
         current level, then shows the current queue
 
@@ -99,7 +101,7 @@ qprac all; batch sends practice full for each spell.@w
 
 <aliases>
 <alias
-   match="^qprac( help)? .*$"
+   match="^qpract?( help)? .*$"
    enabled="y"
    regexp="y"
    sequence="101"
@@ -107,7 +109,7 @@ qprac all; batch sends practice full for each spell.@w
    script="qprac_help"
 ></alias>
 <alias
-   match="^qprac remove (?P<spell>.*)$"
+   match="^qpract? remove (?P<spell>.*)$"
    enabled="y"
    regexp="y"
    sequence="100"
@@ -115,7 +117,7 @@ qprac all; batch sends practice full for each spell.@w
    script="remove_spell"
 ></alias>
 <alias
-   match="^qprac clear$"
+   match="^qpract? clear$"
    enabled="y"
    regexp="y"
    sequence="100"
@@ -123,7 +125,7 @@ qprac all; batch sends practice full for each spell.@w
    script="remove_all"
 ></alias>
 <alias
-   match="^qprac list$"
+   match="^qpract? list$"
    enabled="y"
    regexp="y"
    sequence="100"
@@ -131,7 +133,7 @@ qprac all; batch sends practice full for each spell.@w
    script="display_qspell_list"
 ></alias>
 <alias
-   match="^qprac next$"
+   match="^qpract? next$"
    enabled="y"
    regexp="y"
    sequence="100"
@@ -139,7 +141,7 @@ qprac all; batch sends practice full for each spell.@w
    script="qprac_next"
 ></alias>
 <alias
-   match="^qprac all$"
+   match="^qpract? all$"
    enabled="y"
    regexp="y"
    sequence="100"
@@ -147,7 +149,7 @@ qprac all; batch sends practice full for each spell.@w
    script="qprac_all"
 ></alias>
 <alias
-   match="^qprac scholar$"
+   match="^qpract? scholar$"
    enabled="y"
    regexp="y"
    sequence="100"

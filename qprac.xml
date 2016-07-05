@@ -17,7 +17,7 @@
    save_state="y"
    date_written="2016-06-28 00:10:00"
    requires="4.73"
-   version="0.6"
+   version="0.65"
    >
 <description trim="y">
 <![CDATA[
@@ -189,15 +189,23 @@ function qprac_help()
 end
 
 function qprac_next()
-    local head = table.remove(list, 1)
-    Send("practice "..head.." full")
+    if #list > 0 then
+        local head = table.remove(list, 1)
+        Send("practice "..head.." full")
+    else
+        ColourNote(spell_show_fg, spell_show_bg, "There are no remaining spells in queue.")
+    end
 end
 
 function qprac_all()
-    for i,v in ipairs(list) do
-        Send("practice "..v.." full")
+    if #list > 0 then
+        for i,v in ipairs(list) do
+            Send("practice "..v.." full")
+        end
+        list = {}
+    else
+        ColourNote(spell_show_fg, spell_show_bg, "There are no remaining spells in queue.")
     end
-    list = {}
 end
 
 function toggle_scholar(name, line, wildcards)

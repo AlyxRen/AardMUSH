@@ -40,6 +40,8 @@ qprac help; Shows detailed help documentation on how to use
 qprac remove spellname; Removes the spell from the queue.
                         Called automatically by clicking [-]
 
+qprac clear; Clears the queue to practice
+
 qprac next; practices the next spell in the queue.
 
 qprac all; batch sends practice full for each spell.@w
@@ -60,12 +62,10 @@ qprac all; batch sends practice full for each spell.@w
    regexp="y"
    send_to="12"
    sequence="100"
-   omit_from_output="y"
+   omit_from_output="n"
    name="start_qspell"
+   script="start_process"
   >
-  <send>
-      EnableTrigger("process_qspell", 1)
-  </send>
   </trigger>
   <trigger
    enabled="n"
@@ -82,12 +82,10 @@ qprac all; batch sends practice full for each spell.@w
    regexp="y"
    send_to="12"
    sequence="100"
-   omit_from_output="y"
+   omit_from_output="n"
    name="finish_qspell"
+   script="end_process"
   >
-  <send>
-      EnableTrigger("process_qspell", 0)
-  </send>
   </trigger>
   <trigger
    enabled="y"
@@ -95,7 +93,7 @@ qprac all; batch sends practice full for each spell.@w
    regexp="y"
    sequence="100"
    name="display_qspell"
-   script="display_qspell_list"
+   omit_from_output="y"
   ></trigger>
 </triggers>
 
@@ -115,6 +113,14 @@ qprac all; batch sends practice full for each spell.@w
    sequence="100"
    ignore_case="y"
    script="remove_spell"
+></alias>
+<alias
+   match="^qprac clear$"
+   enabled="y"
+   regexp="y"
+   sequence="100"
+   ignore_case="y"
+   script="remove_all"
 ></alias>
 <alias
    match="^qprac list$"
@@ -210,6 +216,11 @@ function find_spells(alias, line, wildcards)
     SendNoEcho("qspell 1 "..level..category.." 0 "..prac)
 end
 
+function remove_all(trigger, line, wildcards)
+    list = {}
+    ColourNote(spell_name_fg, spell_name_bg, "Cleared the list of spells.")
+end
+
 function remove_spell(trigger, line, wildcards)
     local new_list = {}
     for i,v in ipairs(list) do
@@ -221,6 +232,13 @@ function remove_spell(trigger, line, wildcards)
     ColourNote(spell_name_fg, spell_name_bg, wildcards.spell.." has been removed.")
 end
 
+function start_process()
+    list = {}
+    EnableTrigger("process_qspell", 1)
+    DeleteLines(1)
+
+    ColourNote(spell_name_fg, spell_name_bg, "Found the following spells and added to queue:")
+end
 function process_qspell(trigger, line, wildcards)
     -- Note(wildcards[1])
     DeleteLines(1)
@@ -232,6 +250,12 @@ function process_qspell(trigger, line, wildcards)
         end
     end
     list[#list+1] = spell
+    display_spell(spell)
+end
+function end_process()
+      EnableTrigger("process_qspell", 0)
+      DeleteLines(1)
+      ColourNote(spell_name_fg, spell_name_bg, "End of list.")
 end
 function display_qspell_list(trigger, line, wildcards)
     DeleteLines(1)

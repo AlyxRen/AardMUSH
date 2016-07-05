@@ -17,11 +17,11 @@
    save_state="y"
    date_written="2016-06-28 00:10:00"
    requires="4.73"
-   version="0.95"
+   version="0.96"
    >
 <description trim="y">
 <![CDATA[
-                        Qprac v0.95
+                        Qprac v0.96
          Configuration:
 
      qprac set scholar: This will set that you're looking at 95
@@ -33,10 +33,10 @@
                         these commands.
 
                 qspell: Gets all unpracticed spells up to your 
-                        current level, then shows the current queue
-
-           qspell fire: gets all unpracticed fire spells up to your
                         current level, then shows the current queue.
+
+       qspell category: gets all unpracticed spells of the category up to
+                        your current level, then shows the current queue.
 
             qprac list: Shows all spells currently in queue. Each entry
                         has a lists of buttons. + and - move the spell up
@@ -57,6 +57,13 @@ qprac remove spellname: Removes the spell from the queue.
             qprac next: practices the next spell in the queue.
 
              qprac all: batch sends practice full for each spell.
+
+    Additional Reading:
+
+          help qspells: A brief version of the spells command, with filters.
+
+           help skills: Contains the list of available categories usable with
+                        qspell.
 ]]>
 </description>
 </plugin>
@@ -215,7 +222,7 @@ help_general_fg = "white"
 list = {}
 
 function qprac_help()
-    ColourNote(help_name_fg, help_bg, "                        Qprac v0.95")
+    ColourNote(help_name_fg, help_bg, "                        Qprac v0.96")
 
     ColourTell(help_name_fg, help_bg, "         Configuration")
     ColourNote(help_general_fg, help_bg, ":")
@@ -245,9 +252,9 @@ function qprac_help()
 
     Note("")
 
-    ColourTell(help_name_fg, help_bg, "           qspell fire")
-    ColourNote(help_general_fg, help_bg, ": gets all unpracticed fire spells up to your")
-    ColourNote(help_general_fg, help_bg, "                        current level, then shows the current queue.")
+    ColourTell(help_name_fg, help_bg, "       qspell category")
+    ColourNote(help_general_fg, help_bg, ": gets all unpracticed spells of the category up to")
+    ColourNote(help_general_fg, help_bg, "                        your current level, then shows the current queue.")
 
     Note("")
 
@@ -289,6 +296,24 @@ function qprac_help()
 
     ColourTell(help_name_fg, help_bg, "             qprac all")
     ColourNote(help_general_fg, help_bg, ": batch sends practice full for each spell.")
+
+    Note("")
+
+    ColourTell(help_name_fg, help_bg, "    Additional Reading")
+    ColourNote(help_general_fg, help_bg, ":")
+
+    Note("")
+
+    ColourTell(help_name_fg, help_bg, "          ")
+    Hyperlink("help qspells", "help qspells", "Display help qspells", help_name_fg, help_bg)
+    ColourNote(help_general_fg, help_bg, ": A brief version of the spells command, with filters.")
+
+    Note("")
+
+    ColourTell(help_name_fg, help_bg, "           ")
+    Hyperlink("help skills", "help skills", "Display help skills", help_name_fg, help_bg)
+    ColourNote(help_general_fg, help_bg, ": Contains the list of available categories usable with")
+    ColourNote(help_general_fg, help_bg, "                        qspell.")
 
 
 end

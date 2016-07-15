@@ -245,7 +245,7 @@ target = {
         elseif effect < 60 then
             return "cast 'acidic touch'"
         elseif effect < 65 then
-            return "cast 'neuralburn'"
+            return "cast 'neural burn'"
         elseif effect < 74 then
             return "cast 'project force'"
         elseif effect < 86 then

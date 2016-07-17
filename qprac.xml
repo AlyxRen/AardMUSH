@@ -190,7 +190,7 @@ qprac remove spellname: Removes the spell from the queue.
    script="toggle_scholar"
 ></alias>
 <alias
-   match="^qspell( [a-zA-Z]*)?$"
+   match="^qspells?( [a-zA-Z]*)?$"
    enabled="y"
    regexp="y"
    sequence="100"
